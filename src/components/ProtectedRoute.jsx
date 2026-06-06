@@ -1,35 +1,43 @@
+// protect pages that require user authentication
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 
 export default function ProtectedRoute({ children }) {
+    const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useEffect(() => { // check whther a user is currently logged in
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
                 setUser(currentUser);
             } else {
                 navigate("/");
             }
+            setLoading(false);
         });
 
         return () => unsubscribe();
     }, [navigate]);
 
-    const logout = async () => {
+    // redirect unauthenticated users to the Login page
+    const handleLogout = async () => {
         await signOut(auth);
         navigate("/");
     };
 
-    if (!user) return <p> Loading... </p>;
+    if (loading) return <p> Loading... </p>;
 
     return (
         <div>
-            <h2 className="dashboard-heading"> Internal Appointment Scheduling System </h2>
-            <p> Dashboard </p>
+            <div style={{ padding: "10px", borderBottom: "1px solid #ccc" }}>
+                Logged in as: {user?.email}
+                <button onClick={handleLogout} style={{ marginLeft: "10px" }}> Logout </button>
+            </div>
+
+            {children}
         </div>
     );
 }
