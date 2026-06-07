@@ -3,9 +3,21 @@ import { db } from "../services/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
+import ConsultationAppointment from "../models/ConsultationAppointment";
+
 export default function Reports() {
     // state varaibles
     const [appointments, setAppointments] = useState([])
+
+    const sampleAppointment = new ConsultationAppointment(
+        "Initial Consultation",
+        "Francis McKee",
+        "2026-06-07",
+        "9:00",
+        "Scheduled"
+    )
+
+    console.log(sampleAppointment.getSummary());
 
     useEffect(() => {
         fetchAppointments();

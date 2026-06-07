@@ -36,7 +36,12 @@ export default function Dashboard() {
     const createAppointment = async (e) => {
         e.preventDefault();
 
-        if (!title || !clientName || !date || !time) {
+        // clean user input to prevent SQL injection
+        const cleanedTitle = title.trim();
+        const cleanedClientName = clientName.trim();
+        const cleanedNotes = notes.trim();
+
+        if (!cleanedTitle || !cleanedClientName || !date || !time) {
             alert("Please fill out all required fields.");
             return;
         }
@@ -46,12 +51,12 @@ export default function Dashboard() {
             await updateDoc(
                 doc(db, "appointments", editingId),
                 {
-                    title,
-                    clientName,
+                    title: cleanedTitle,
+                    clientName: cleanedClientName,
                     date,
                     time,
                     status,
-                    notes
+                    notes: cleanedNotes
                 }
             );
 
@@ -60,12 +65,12 @@ export default function Dashboard() {
         } else {
 
             await addDoc(collection(db, "appointments"), {
-                title,
-                clientName,
+                title: cleanedTitle,
+                clientName: cleanedClientName,
                 date,
                 time,
                 status,
-                notes,
+                notes: cleanedNotes,
                 createdAt: new Date()
             });
         }
@@ -98,6 +103,21 @@ export default function Dashboard() {
         setStatus(appointment.status);
         setNotes(appointment.notes || ""); // or "" if no notes
     }
+
+    const getAppointmentStatus = (appointment) => {
+
+        const appointmentDateTime = new Date(
+            `${appointment.date}T${appointment.time}`
+        );
+
+        const currentDateTime = new Date();
+
+        if (appointment.status === "Scheduled" && appointmentDateTime < currentDateTime) {
+            return "Completed";
+        }
+
+        return appointment.status;
+    };
 
     return (
         <div className="dashboard-container">
@@ -143,9 +163,9 @@ export default function Dashboard() {
 
             <h3> Appointments </h3>
             
-            <input 
+            <input className="appointment-search"
                 type="text"
-                placeholder="Search appointments"
+                placeholder="Search appointments by Title or Client"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -175,10 +195,12 @@ export default function Dashboard() {
                                 <td> {appointment.clientName} </td>
                                 <td> {appointment.date} </td>
                                 <td> {appointment.time} </td>
-                                <td> {appointment.status} </td>
+                                <td> {getAppointmentStatus(appointment)} </td>
                                 <td>
-                                    <button onClick={() => editAppointment(appointment)}> Edit </button>
-                                    <button onClick={() => deleteAppointment(appointment.id)}> Delete </button>
+                                    <div className="action-buttons">
+                                        <button onClick={() => editAppointment(appointment)}> Edit </button>
+                                        <button onClick={() => deleteAppointment(appointment.id)}> Delete </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

@@ -54,6 +54,13 @@
   box-sizing: border-box;
 }
 
+.appointment-search {
+  width: 70%;
+  max-width: 700px;
+  padding: 10px;
+  font-size: 16px;
+}
+
 table, td, th {
   border: 1px solid;
 }
@@ -68,6 +75,12 @@ table {
 
 .appointment-table {
   width: 90%;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 
 .report-container {

@@ -16,6 +16,14 @@ export default class Appointment {
         this.notes = notes;
     }
 
+    getTitle() {
+        return this._title;
+    }
+
+    getClientName() {
+        return this._clientName;
+    }
+
     getSummary() {
         return `${this.title} - ${this.clientName}`;
     }
