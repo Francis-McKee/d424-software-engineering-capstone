@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../services/firebase";
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
     // state variables
@@ -183,7 +184,11 @@ export default function Dashboard() {
                         ))}
                 </tbody>
             </table>
-
+            
+            <br></br>
+            <Link to="/reports"> View Reports </Link>
+            <br></br>
         </div>
+
     );
 }

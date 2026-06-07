@@ -68,4 +68,18 @@ table {
 
 .appointment-table {
   width: 90%;
-}               
+}
+
+.report-container {
+  text-align: center;
+}
+
+.report-heading {
+  margin-top: 10px;
+}
+
+.report-table-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
