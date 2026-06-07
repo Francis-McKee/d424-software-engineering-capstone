@@ -3,8 +3,8 @@ import Appointment from "./Appointment";
 // inheritance and polymorphism
 export default class ConsultationAppointment extends Appointment {
 
-    constructor(title, clientName, date, time, status) {
-        super(title, clientName, date, time, status);
+    constructor(title, clientName, appointmentDate, appointmentTime, status, notes) {
+        super(title, clientName, appointmentDate, appointmentTime, status, notes);
     }
 
     getSummary() {

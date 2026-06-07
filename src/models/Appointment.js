@@ -25,6 +25,6 @@ export default class Appointment {
     }
 
     getSummary() {
-        return `${this.title} - ${this.clientName}`;
+        return `${this._title} - ${this._clientName}`;
     }
 }
