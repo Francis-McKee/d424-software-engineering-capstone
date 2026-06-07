@@ -65,3 +65,7 @@ td, th {
 table {
   border-collapse: collapse; /* no double borders */
 }
+
+.appointment-table {
+  width: 90%;
+}               

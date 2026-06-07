@@ -1,3 +1,3 @@
-export default function Reports() {
-    return <h1> Reports </h1>;
-}
+import { useEffect, useState } from "react";
+import { db } from "../services/firebase";
+import { collection, getDocs } from "firebase/firestore";

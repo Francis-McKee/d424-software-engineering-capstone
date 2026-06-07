@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../services/firebase";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from "firebase/firestore";
 
 export default function Dashboard() {
-    
+    // state variables
     const [appointments, setAppointments] = useState([]);
 
     const [title, setTitle] = useState("");
@@ -12,6 +12,10 @@ export default function Dashboard() {
     const [time, setTime] = useState("");
     const [status, setStatus] = useState("Scheduled");
     const [notes, setNotes] = useState("");
+
+    const [editingId, setEditingId] = useState(null);
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     const fetchAppointments = async () => {
         const snapshot = await getDocs(collection(db, "appointments"));
@@ -35,16 +39,35 @@ export default function Dashboard() {
             alert("Please fill out all required fields.");
             return;
         }
+        
+        if (editingId) {
 
-        await addDoc(collection(db, "appointments"), {
-            title,
-            clientName,
-            date,
-            time,
-            status,
-            notes,
-            createdAt: new Date()
-        });
+            await updateDoc(
+                doc(db, "appointments", editingId),
+                {
+                    title,
+                    clientName,
+                    date,
+                    time,
+                    status,
+                    notes
+                }
+            );
+
+            setEditingId(null);
+
+        } else {
+
+            await addDoc(collection(db, "appointments"), {
+                title,
+                clientName,
+                date,
+                time,
+                status,
+                notes,
+                createdAt: new Date()
+            });
+        }
 
         setTitle("");
         setClientName("");
@@ -62,6 +85,17 @@ export default function Dashboard() {
         );
 
         fetchAppointments();
+    }
+
+    const editAppointment = (appointment) => {
+        setEditingId(appointment.id);
+
+        setTitle(appointment.title);
+        setClientName(appointment.clientName);
+        setDate(appointment.date);
+        setTime(appointment.time);
+        setStatus(appointment.status);
+        setNotes(appointment.notes || ""); // or "" if no notes
     }
 
     return (
@@ -101,12 +135,22 @@ export default function Dashboard() {
                     onChange={(e) => setNotes(e.target.value)}
                 />
 
-                <button type="submit"> Create Appointment </button>
+                <button type="submit">
+                    {editingId ? "Save Changes" : "Create Appointment"} {/* ternary, means if editingId === null then the if statement is false and it says Create Appointment */}
+                </button>
             </form>
 
             <h3> Appointments </h3>
+            
+            <input 
+                type="text"
+                placeholder="Search appointments"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <br></br>
 
-            <table>
+            <table className="appointment-table">
                 <thead>
                     <tr>
                         <th> Title </th>
@@ -119,20 +163,27 @@ export default function Dashboard() {
                 </thead>
 
                 <tbody>
-                    {appointments.map((appointment) => (
-                        <tr key={appointment.id}>
-                            <td> {appointment.title} </td>
-                            <td> {appointment.clientName} </td>
-                            <td> {appointment.date} </td>
-                            <td> {appointment.time} </td>
-                            <td> {appointment.status} </td>
-                            <td>
-                                <button onClick={() => deleteAppointment(appointment.id)}> Delete </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {appointments
+                        .filter((appointment) => // search functionality that can filter by client name or title
+                            appointment.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            appointment.title.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .map((appointment) => (
+                            <tr key={appointment.id}>
+                                <td> {appointment.title} </td>
+                                <td> {appointment.clientName} </td>
+                                <td> {appointment.date} </td>
+                                <td> {appointment.time} </td>
+                                <td> {appointment.status} </td>
+                                <td>
+                                    <button onClick={() => editAppointment(appointment)}> Edit </button>
+                                    <button onClick={() => deleteAppointment(appointment.id)}> Delete </button>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
+
         </div>
     );
 }
