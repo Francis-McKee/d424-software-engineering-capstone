@@ -68,8 +68,8 @@ export default function Register() {
             </form>
 
             <p className="auth-link"> Already have an account?{" "} <Link to="/"> Login here </Link> </p>
-
-            {message && <p>{message}</p>}
+            <br></br>
+            {message && <p className="message"> {message} </p>}
         </div>
     );
 }

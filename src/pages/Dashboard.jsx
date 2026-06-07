@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../services/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 export default function Dashboard() {
     
@@ -55,6 +55,15 @@ export default function Dashboard() {
         fetchAppointments();
     };
 
+    const deleteAppointment = async (id) => {
+
+        await deleteDoc(
+            doc(db, "appointments", id)
+        );
+
+        fetchAppointments();
+    }
+
     return (
         <div className="dashboard-container">
             <h2 className="dashboard-heading"> Internal Appointment Scheduling System </h2>
@@ -97,14 +106,33 @@ export default function Dashboard() {
 
             <h3> Appointments </h3>
 
-            {appointments.map((a) => (
-                <div key={a.id}>
-                    <strong>{a.title}</strong><br />
-                    {a.clientName}<br />
-                    {a.date} {a.time}<br />
-                    {a.status}
-                </div>
-            ))}
+            <table>
+                <thead>
+                    <tr>
+                        <th> Title </th>
+                        <th> Client </th>
+                        <th> Date </th>
+                        <th> Time </th>
+                        <th> Status </th>
+                        <th> Actions </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {appointments.map((appointment) => (
+                        <tr key={appointment.id}>
+                            <td> {appointment.title} </td>
+                            <td> {appointment.clientName} </td>
+                            <td> {appointment.date} </td>
+                            <td> {appointment.time} </td>
+                            <td> {appointment.status} </td>
+                            <td>
+                                <button onClick={() => deleteAppointment(appointment.id)}> Delete </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }

@@ -16,6 +16,16 @@
   margin-top: 20px;
 }
 
+.auth-form button {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.message {
+  color: red;
+}
+
 .dashboard-heading {
   margin-top: 10px;
 }
@@ -44,8 +54,14 @@
   box-sizing: border-box;
 }
 
-.auth-form button {
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
+table, td, th {
+  border: 1px solid;
+}
+
+td, th {
+  padding: 5px;
+}
+
+table {
+  border-collapse: collapse; /* no double borders */
 }

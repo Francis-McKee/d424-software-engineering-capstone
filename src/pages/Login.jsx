@@ -77,12 +77,12 @@ export default function Login() {
 
                 <button type="submit">Login</button>
             </form>
-
+                <br></br>
                 <button onClick={resetPassword}> Forgot Password </button>
 
                 <p className="auth-link"> Don't have an account?{" "}<Link to="register"> Create one here </Link> </p>
-
-                {message && <p>{message}</p>}
+                <br></br>
+                {message && <p className="message"> {message} </p>}
         </div>
     );
 }
