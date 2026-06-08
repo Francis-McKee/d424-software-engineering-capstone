@@ -15,6 +15,18 @@ export default function Login() {
     const loginUser = async (event) => {
         event.preventDefault();
 
+        if (!email.trim()) {
+            setMessage("Please enter an email address.");
+            return;
+        }
+
+        if (!password.trim()) {
+            setMessage("Please enter a password.");
+            return;
+        }
+
+        setMessage("");
+
         try { // send authenticated users to the Dashboard page
             await signInWithEmailAndPassword(auth, email, password);
             navigate("/dashboard");
