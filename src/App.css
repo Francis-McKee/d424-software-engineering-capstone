@@ -129,3 +129,15 @@ button:hover {
   margin-top: 20px;
   font-style: italic;
 }
+
+a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #2563eb;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
