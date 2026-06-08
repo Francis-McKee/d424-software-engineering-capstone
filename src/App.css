@@ -124,3 +124,8 @@ button {
 button:hover {
   background-color: #1d4ed8;
 }
+
+.no-appointments {
+  margin-top: 20px;
+  font-style: italic;
+}

@@ -24,6 +24,15 @@ export default function ProtectedRoute({ children }) {
 
     // redirect unauthenticated users to the Login page
     const handleLogout = async () => {
+
+        const confirmed = window.confirm( // confirms logout request
+            "Are you sure you want to log out?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
         await signOut(auth);
         navigate("/");
     };
