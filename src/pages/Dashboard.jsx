@@ -18,6 +18,8 @@ export default function Dashboard() {
 
     const [searchTerm, setSearchTerm] = useState("");
 
+    const [message, setMessage] = useState("");
+
     const fetchAppointments = async () => {
         const snapshot = await getDocs(collection(db, "appointments"));
 
@@ -36,15 +38,22 @@ export default function Dashboard() {
     const createAppointment = async (e) => {
         e.preventDefault();
 
-        // clean user input to prevent SQL injection
+        // clean user input by trimming whitespace
         const cleanedTitle = title.trim();
         const cleanedClientName = clientName.trim();
         const cleanedNotes = notes.trim();
 
         if (!cleanedTitle || !cleanedClientName || !date || !time) {
-            alert("Please fill out all required fields.");
+            setMessage("Please fill out all required fields.");
             return;
         }
+
+        if (cleanedClientName.split(/\s+/).length < 2) {
+            setMessage("Please enter the client's first and last name.");
+            return;
+        }
+
+        setMessage(""); // clears message when validation succeeds
         
         if (editingId) {
 
@@ -159,6 +168,9 @@ export default function Dashboard() {
                 <button type="submit">
                     {editingId ? "Save Changes" : "Create Appointment"} {/* ternary, means if editingId === null then the if statement is false and it says Create Appointment */}
                 </button>
+
+                <br></br>
+                {message && <p className="message"> {message} </p>}
             </form>
 
             <h3> Appointments </h3>

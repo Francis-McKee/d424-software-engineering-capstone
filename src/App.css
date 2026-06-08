@@ -54,6 +54,7 @@
 .appointment-form input,
 .appointment-form textarea {
   padding: 10px;
+  font-family: inherit;
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
