@@ -95,6 +95,14 @@ export default function Dashboard() {
 
     const deleteAppointment = async (id) => {
 
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this appointment?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+        
         await deleteDoc(
             doc(db, "appointments", id)
         );
