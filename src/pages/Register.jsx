@@ -16,6 +16,11 @@ export default function Register() {
     const registerUser = async (event) => {
         event.preventDefault();
 
+        if (!email.includes("@")) {
+            setMessage("Please enter a valid email address.");
+            return;
+        }
+        
         if (password !== confirmPassword) {
             setMessage("Passwords do not match.");
             return;
@@ -43,21 +48,21 @@ export default function Register() {
             <h2> Register </h2>
 
             <form onSubmit={registerUser} className="auth-form">
-                <input
+                <input className="auth-input"
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
-                <input
+                <input className="auth-input"
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <input
+                <input className="auth-input"
                     type="password"
                     placeholder="Confirm Password"
                     value={confirmPassword}

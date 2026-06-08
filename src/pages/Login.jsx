@@ -61,24 +61,24 @@ export default function Login() {
             <h2> Login </h2>
 
             <form onSubmit={loginUser} className="auth-form">
-                <input
+                <input className="auth-input"
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
-                <input
+                <input className="auth-input"
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <button type="submit">Login</button>
+                <button type="submit"> Login </button>
             </form>
                 <br></br>
-                <button onClick={resetPassword}> Forgot Password </button>
+                <button onClick={resetPassword}> Forgot Password? </button>
 
                 <p className="auth-link"> Don't have an account?{" "}<Link to="register"> Create one here </Link> </p>
                 <br></br>
