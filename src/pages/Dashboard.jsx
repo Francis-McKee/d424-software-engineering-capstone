@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { db, auth } from "../services/firebase";
+import { db } from "../services/firebase";
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { Link } from "react-router-dom";
+
+import { getAppointmentStatus } from "../utils/appointmentStatus";
 
 export default function Dashboard() {
     // state variables
@@ -23,10 +25,31 @@ export default function Dashboard() {
     const fetchAppointments = async () => {
         const snapshot = await getDocs(collection(db, "appointments"));
 
-        const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        const data = [];
+
+        for (const appointmentDoc of snapshot.docs) {
+
+            const appointment = {
+                id: appointmentDoc.id,
+                ...appointmentDoc.data()
+            };
+
+            const updatedStatus = getAppointmentStatus(appointment);
+
+            if (updatedStatus !== appointment.status) {
+
+                await updateDoc(
+                    doc(db, "appointments", appointment.id),
+                    {
+                        status: updatedStatus
+                    }
+                );
+
+                appointment.status = updatedStatus;
+            }
+
+            data.push(appointment);
+        }
 
         setAppointments(data);
     };
@@ -120,21 +143,6 @@ export default function Dashboard() {
         setStatus(appointment.status);
         setNotes(appointment.notes || ""); // or "" if no notes
     }
-
-    const getAppointmentStatus = (appointment) => {
-
-        const appointmentDateTime = new Date(
-            `${appointment.date}T${appointment.time}`
-        );
-
-        const currentDateTime = new Date();
-
-        if (appointment.status === "Scheduled" && appointmentDateTime < currentDateTime) {
-            return "Completed";
-        }
-
-        return appointment.status;
-    };
 
     return (
         <div className="dashboard-container">

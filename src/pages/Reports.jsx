@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 
 import ConsultationAppointment from "../models/ConsultationAppointment";
 
+import { getAppointmentStatus } from "../utils/appointmentStatus";
+
 export default function Reports() {
     // state varaibles
     const [appointments, setAppointments] = useState([])
@@ -39,24 +41,6 @@ export default function Reports() {
     const reportTimestamp = new Date().toLocaleString();
 
     const hasAppointments = appointments.length > 0;
-
-    const getAppointmentStatus = (appointment) => {
-
-        const appointmentDateTime = new Date(
-            `${appointment.date}T${appointment.time}`
-        );
-
-        const currentDateTime = new Date();
-
-        if (
-            appointment.status === "Scheduled" &&
-            appointmentDateTime < currentDateTime
-        ) {
-            return "Completed";
-        }
-
-        return appointment.status;
-    };
 
     return (
         <div className="report-container">
