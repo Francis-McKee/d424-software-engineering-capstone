@@ -40,6 +40,24 @@ export default function Reports() {
 
     const hasAppointments = appointments.length > 0;
 
+    const getAppointmentStatus = (appointment) => {
+
+        const appointmentDateTime = new Date(
+            `${appointment.date}T${appointment.time}`
+        );
+
+        const currentDateTime = new Date();
+
+        if (
+            appointment.status === "Scheduled" &&
+            appointmentDateTime < currentDateTime
+        ) {
+            return "Completed";
+        }
+
+        return appointment.status;
+    };
+
     return (
         <div className="report-container">
 
@@ -72,7 +90,7 @@ export default function Reports() {
                                     <td> {appointment.clientName} </td>
                                     <td> {appointment.date} </td>
                                     <td> {appointment.time} </td>
-                                    <td> {appointment.status} </td>
+                                    <td> {getAppointmentStatus(appointment)} </td>
                                 </tr>
                             ))}
                         </tbody>
